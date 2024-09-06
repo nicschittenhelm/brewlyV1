@@ -6,15 +6,18 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-shopping-cart',
   templateUrl: './shopping-cart.component.html',
-  styleUrls: ['./shopping-cart.component.css']
+  styleUrls: ['./shopping-cart.component.css'],
 })
 export class ShoppingCartComponent implements OnInit {
-  
   cartItems: CartItem[] = [];
   personalInfoForm: FormGroup;
   isCartEmpty: boolean = false; // New property to track cart status
 
-  constructor(private cartService: CartService, private fb: FormBuilder, private router: Router) {
+  constructor(
+    private cartService: CartService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {
     this.personalInfoForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -22,7 +25,7 @@ export class ShoppingCartComponent implements OnInit {
       address: ['', Validators.required],
       postalCode: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       city: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]]
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9\s]*$/)]],
     });
   }
 
@@ -49,7 +52,7 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
+    Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
       if ((control as FormGroup).controls) {
         this.markFormGroupTouched(control as FormGroup);
